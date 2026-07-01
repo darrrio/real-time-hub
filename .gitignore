@@ -1,6 +1,9 @@
 # PromptOps context snapshot
 .promptops/
 
+# Claude Code local settings and generated shared context
+.claude/
+
 # PromptOps session assets
 .promptops-assets/
 

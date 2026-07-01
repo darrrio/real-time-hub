@@ -1,0 +1,129 @@
+:root {
+  --heat: #e0693e;
+  --cool: #3e8ee0;
+  --hold: #3ea86e;
+  --bg: #f5f6f8;
+  --card-bg: #ffffff;
+  --text: #1b1f24;
+  --muted: #6b7280;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: var(--card-bg);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+header h1 {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.status {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status.connected { background: #dcfce7; color: #166534; }
+.status.disconnected { background: #fee2e2; color: #991b1b; }
+
+main#zones {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.zone-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.zone-card h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  text-transform: capitalize;
+}
+
+.zone-metrics {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.temp-now {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.temp-setpoint {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.action-badge {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.action-badge.heat { background: var(--heat); }
+.action-badge.cool { background: var(--cool); }
+.action-badge.hold { background: var(--hold); }
+.action-badge.unknown { background: var(--muted); }
+
+.suggestion {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text);
+  background: #f0f2f5;
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  min-height: 2.5em;
+}
+
+.suggestion.empty {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.updated-at {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+canvas {
+  margin-top: 0.75rem;
+  max-height: 120px;
+}

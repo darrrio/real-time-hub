@@ -8,10 +8,7 @@ from kafka import KafkaProducer
 def make_producer() -> KafkaProducer:
     return KafkaProducer(
         bootstrap_servers=os.environ["REDPANDA_BOOTSTRAP_SERVERS"],
-        security_protocol="SASL_SSL",
-        sasl_mechanism="SCRAM-SHA-256",
-        sasl_plain_username=os.environ["REDPANDA_SASL_USERNAME"],
-        sasl_plain_password=os.environ["REDPANDA_SASL_PASSWORD"],
+        security_protocol="PLAINTEXT",
         value_serializer=lambda m: json.dumps(m).encode("utf-8"),
     )
 
