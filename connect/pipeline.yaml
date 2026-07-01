@@ -1,0 +1,50 @@
+input:
+  redpanda:
+    seed_brokers: [ "${REDPANDA_BOOTSTRAP_SERVERS}" ]
+    topics:
+      - "sensors.*"
+      - "weather.forecast"
+      - "comfort.setpoints"
+      - "schedule.hours"
+    consumer_group: "hvac-comfort-pipeline"
+    tls:
+      enabled: true
+    sasl:
+      - mechanism: SCRAM-SHA-256
+        username: "${REDPANDA_SASL_USERNAME}"
+        password: "${REDPANDA_SASL_PASSWORD}"
+
+pipeline:
+  processors:
+    - mapping: |
+        meta domain = @kafka_topic
+        meta zone_id = this.zone_id.or(this.unit_id).or("unknown")
+        meta timestamp = this.timestamp
+        root = this
+
+    - openai_chat_completion:
+        api_key: "${OPENAI_API_KEY}"
+        model: "gpt-4o-mini"
+        system_prompt: >-
+          You regulate indoor comfort temperature for an HVAC system.
+          Given one JSON sensor/context reading, reply with a short,
+          actionable suggestion for adjusting heating in that zone.
+        prompt: "root = this.string()"
+        tools: []
+
+    - mapping: |
+        root.zone_id = meta("zone_id")
+        root.timestamp = meta("timestamp")
+        root.suggestion = content().string()
+        root.raw_model_output = content().string()
+
+output:
+  redpanda:
+    seed_brokers: [ "${REDPANDA_BOOTSTRAP_SERVERS}" ]
+    topic: "comfort.suggestions"
+    tls:
+      enabled: true
+    sasl:
+      - mechanism: SCRAM-SHA-256
+        username: "${REDPANDA_SASL_USERNAME}"
+        password: "${REDPANDA_SASL_PASSWORD}"

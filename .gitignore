@@ -1,0 +1,12 @@
+# PromptOps context snapshot
+.promptops/
+
+# PromptOps session assets
+.promptops-assets/
+
+# Environment variables (contains secrets)
+.env
+
+# Python
+__pycache__/
+*.pyc

@@ -1,0 +1,15 @@
+services:
+  redpanda-connect:
+    image: docker.redpanda.com/redpandadata/connect
+    volumes:
+      - ./connect:/connect
+    command: run /connect/pipeline.yaml
+    env_file: .env
+
+  generator:
+    image: python:3.12-slim
+    working_dir: /app
+    volumes:
+      - ./generators:/app/generators
+    env_file: .env
+    command: sh -c "pip install -r generators/requirements.txt && python -m generators.main"
