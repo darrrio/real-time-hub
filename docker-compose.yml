@@ -19,7 +19,7 @@ services:
     environment:
       KAFKA_BROKERS: redpanda:9092
     ports:
-      - "8081:8080"
+      - "9081:8080"
     depends_on:
       - redpanda
 
@@ -37,6 +37,8 @@ services:
     build: ./llm-annotator
     ports:
       - "8000:8000"
+    volumes:
+      - annotator-data:/root/.cache/huggingface
 
   generator:
     image: python:3.12-slim
@@ -49,8 +51,9 @@ services:
   dashboard:
     build: ./dashboard
     ports:
-      - "8080:8080"
+      - "9080:8080"
     env_file: .env
 
 volumes:
   redpanda-data:
+  annotator-data:

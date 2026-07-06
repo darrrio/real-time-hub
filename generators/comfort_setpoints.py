@@ -2,8 +2,8 @@ import time
 
 from .common import emit_interval_seconds, make_producer, now_iso
 
-ZONES = ["living_room", "bedroom", "kitchen"]
-SETPOINT_C = {"living_room": 21.0, "bedroom": 19.0, "kitchen": 20.0}
+ZONES = ["room_1", "room_2", "room_3"]
+SETPOINT_C = {"room_1": 22.0, "room_2": 20.0, "room_3": 24.0}
 
 
 def run():

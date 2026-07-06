@@ -3,8 +3,8 @@ from datetime import datetime, timezone
 
 from .common import emit_interval_seconds, make_producer, now_iso
 
-ZONES = ["living_room", "bedroom", "kitchen"]
-COMFORT_HOURS = range(6, 23)  # 06:00-22:59 is "comfort" mode, else "eco"
+ZONES = ["room_1", "room_2", "room_3"]
+COMFORT_HOURS = range(9, 17)  # 09:00-16:59 is "comfort" mode, else "eco"
 
 
 def run():

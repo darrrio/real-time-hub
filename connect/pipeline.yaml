@@ -51,11 +51,11 @@ pipeline:
           root.timestamp = meta("timestamp")
           root.setpoint_c = this.setpoint_c
           root.comfort_delta = ((this.setpoint_c - root.temperature_c) * 100).round() / 100
-          # Deadband: +/-1C avoids overheating (over-eager heating) and
+          # Deadband: +/-0.5C avoids overheating (over-eager heating) and
           # underperformance (chattering / never settling) around the setpoint.
-          root.action = if root.comfort_delta > 1.0 {
+          root.action = if root.comfort_delta > 0.5 {
               "heat"
-            } else if root.comfort_delta < -1.0 {
+            } else if root.comfort_delta < -0.5 {
               "cool"
             } else {
               "hold"
@@ -72,27 +72,27 @@ output:
           seed_brokers: [ "${REDPANDA_BOOTSTRAP_SERVERS}" ]
           topic: "comfort.actions"
 
-      - processors:
-          - mapping: 'root = if this.action == "hold" { deleted() } else { this }'
-          - branch:
-              request_map: |
-                root.zone_id = this.zone_id
-                root.temperature_c = this.temperature_c
-                root.setpoint_c = this.setpoint_c
-                root.comfort_delta = this.comfort_delta
-                root.action = this.action
-              processors:
-                - http:
-                    url: "http://llm-annotator:8000/annotate"
-                    verb: POST
-                    headers:
-                      Content-Type: application/json
-                    timeout: 15s
-                    retries: 0
-                - catch:
-                    - mapping: 'root.suggestion = "annotator unavailable"'
-              result_map: |
-                root.suggestion = this.suggestion.or("annotator unavailable")
-        redpanda:
-          seed_brokers: [ "${REDPANDA_BOOTSTRAP_SERVERS}" ]
-          topic: "comfort.suggestions"
+      # - processors:
+      #     - mapping: 'root = if this.action == "hold" { deleted() } else { this }'
+      #     - branch:
+      #         request_map: |
+      #           root.zone_id = this.zone_id
+      #           root.temperature_c = this.temperature_c
+      #           root.setpoint_c = this.setpoint_c
+      #           root.comfort_delta = this.comfort_delta
+      #           root.action = this.action
+      #         processors:
+      #           - http:
+      #               url: "http://llm-annotator:8000/annotate"
+      #               verb: POST
+      #               headers:
+      #                 Content-Type: application/json
+      #               timeout: 15s
+      #               retries: 0
+      #           - catch:
+      #               - mapping: 'root.suggestion = "annotator unavailable"'
+      #         result_map: |
+      #           root.suggestion = this.suggestion.or("annotator unavailable")
+      #   redpanda:
+      #     seed_brokers: [ "${REDPANDA_BOOTSTRAP_SERVERS}" ]
+      #     topic: "comfort.suggestions"

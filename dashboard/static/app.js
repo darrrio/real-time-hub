@@ -58,6 +58,22 @@ function createZoneCard(zoneId) {
           tension: 0,
           pointRadius: 0,
         },
+        {
+          label: "High Boundary",
+          data: [],
+          borderColor: "#e40eec",
+          borderDash: [4, 4],
+          tension: 0,
+          pointRadius: 0,
+        },
+        {
+          label: "Low Boundary",
+          data: [],
+          borderColor: "#02e459",
+          borderDash: [4, 4],
+          tension: 0,
+          pointRadius: 0,
+        },
       ],
     },
     options: {
@@ -108,6 +124,8 @@ function renderZone(zone) {
   chart.data.labels = history.map((h) => fmtTime(h.t));
   chart.data.datasets[0].data = history.map((h) => h.temperature_c);
   chart.data.datasets[1].data = history.map((h) => h.setpoint_c);
+  chart.data.datasets[2].data = history.map((h) => h.setpoint_c + 0.5);
+  chart.data.datasets[3].data = history.map((h) => h.setpoint_c - 0.5);
   chart.update("none");
 }
 
